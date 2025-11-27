@@ -1,0 +1,25 @@
+# Core ML/RL libraries
+stable-baselines3>=2.2.1
+sb3-contrib>=2.2.1
+gymnasium>=0.29.1
+
+# Data handling
+pandas>=2.2.0
+numpy>=1.26.0
+yfinance>=0.2.33
+
+# Technical indicators
+ta>=0.11.0
+
+# Visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# PyTorch (backend for stable-baselines3)
+torch>=2.0.0
+
+# Utilities
+tqdm>=4.66.0
+python-dateutil>=2.8.2
+rich>=14.0.0
+tensorboard>=2.15.0
