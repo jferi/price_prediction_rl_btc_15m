@@ -57,7 +57,7 @@ class TradingEnv(gym.Env):
         self.portfolio_value = self.config.env.initial_balance
         self.trades = []
         
-        return self._get_observation(), {}
+        return self.get_observation(), {}
 
     def step(self, action):
         # 1. Decision Logic
@@ -105,15 +105,15 @@ class TradingEnv(gym.Env):
         # Reward Scaling
         scaled_reward = reward * 100.0 
 
-        return self._get_observation(), scaled_reward, terminated, truncated, self._get_info()
+        return self.get_observation(), scaled_reward, terminated, truncated, self.get_info()
 
-    def _get_observation(self):
+    def get_observation(self):
         # Window slicing
         end = self.current_step + 1
         start = end - self.window_size
         return self.features[start:end]
 
-    def _get_info(self):
+    def get_info(self):
         return {
             'portfolio_value': self.portfolio_value,
             'position': self.position,

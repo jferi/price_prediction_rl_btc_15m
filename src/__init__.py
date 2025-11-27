@@ -13,6 +13,7 @@ from .network import LSTMExtractor
 from .agent import create_agent
 from .training import Trainer
 from .evaluation import Evaluator
+from .visualization import DashboardCallback
 
 __version__ = "2.0.0"
 __all__ = [
@@ -24,4 +25,5 @@ __all__ = [
     "create_agent",
     "Trainer",
     "Evaluator",
+    "DashboardCallback",
 ]

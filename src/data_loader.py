@@ -61,7 +61,7 @@ class DataLoader:
         if start_date is None:
             start_date = (datetime.now() - timedelta(days=59)).strftime('%Y-%m-%d')
         
-        cache_file = self._get_cache_path(start_date, end_date)
+        cache_file = self.get_cache_path(start_date, end_date)
         
         # Try to load from cache
         if use_cache and os.path.exists(cache_file):
@@ -80,7 +80,7 @@ class DataLoader:
         )
         
         # Clean up the data
-        data = self._clean_data(data)
+        data = self.clean_data(data)
         
         # Cache the data
         if use_cache:
@@ -91,7 +91,7 @@ class DataLoader:
         print(f"Downloaded {len(data)} candles")
         return data
     
-    def _clean_data(self, data: pd.DataFrame) -> pd.DataFrame:
+    def clean_data(self, data: pd.DataFrame) -> pd.DataFrame:
         """
         Clean and preprocess the raw data.
         
@@ -129,7 +129,7 @@ class DataLoader:
         
         return data
     
-    def _get_cache_path(self, start_date: str, end_date: str) -> str:
+    def get_cache_path(self, start_date: str, end_date: str) -> str:
         """Generate cache file path."""
         filename = f"{self.ticker}_{self.interval}_{start_date}_{end_date}.csv"
         return os.path.join(self.data_dir, filename)

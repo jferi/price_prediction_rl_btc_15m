@@ -3,9 +3,10 @@ Training Loop and Utilities.
 """
 
 import os
-from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.callbacks import BaseCallback, CallbackList
 from stable_baselines3.common.logger import HParam
 import numpy as np
+from .visualization import DashboardCallback
 
 class TensorboardCallback(BaseCallback):
     """
@@ -39,12 +40,17 @@ class Trainer:
     def train(self):
         print(f"Starting training for {self.config.training.total_timesteps} timesteps...")
         
-        callback = TensorboardCallback()
+        # Combine callbacks
+        tb_callback = TensorboardCallback()
+        dash_callback = DashboardCallback(total_timesteps=self.config.training.total_timesteps)
+        
+        # Create callback list (Dashboard handles visualization, TB logs to file)
+        callbacks = CallbackList([tb_callback, dash_callback])
         
         self.agent.learn(
             total_timesteps=self.config.training.total_timesteps,
-            callback=callback,
-            progress_bar=True
+            callback=callbacks,
+            progress_bar=False # Disable default progress bar as Dashboard has one
         )
         
         print("Training finished.")

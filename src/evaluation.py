@@ -18,17 +18,15 @@ class Evaluator:
         """
         print("Starting backtest...")
         
-        # Preprocess raw data
+        # Preprocess raw data (adds features and log_return)
         df_processed = self.feature_engineer.preprocess(df_raw)
         
-        # Align
-        df_raw_aligned = df_raw.loc[df_processed.index]
-        
-        # Scale data
+        # Scale data (z-score normalization)
         df_scaled = self.feature_engineer.scale(df_processed)
         
-        # Create environment with BOTH scaled and raw data
-        env = create_env(df_scaled, df_raw_aligned, self.config, self.feature_engineer)
+        # Create environment with scaled features AND unscaled processed data
+        # df_processed contains the raw log_return needed for reward calculation
+        env = create_env(df_scaled, df_processed, self.config, self.feature_engineer)
         obs, _ = env.reset()
         
         # Storage
@@ -65,11 +63,24 @@ class Evaluator:
 
     def plot_results(self, results):
         plt.figure(figsize=(12, 6))
-        plt.plot(results['portfolio_value'], label='Portfolio Value')
-        plt.title('Backtest Results')
-        plt.xlabel('Steps')
-        plt.ylabel('Value ($)')
-        plt.legend()
-        plt.grid(True)
+        
+        # Plot portfolio value
+        ax1 = plt.subplot(2, 1, 1)
+        ax1.plot(results['portfolio_value'], label='Portfolio Value')
+        ax1.set_title('Backtest Results')
+        ax1.set_ylabel('Value ($)')
+        ax1.legend()
+        ax1.grid(True)
+        
+        # Plot positions
+        ax2 = plt.subplot(2, 1, 2, sharex=ax1)
+        ax2.plot(results['position'], label='Position (1=Long, 0=Cash)', color='orange', drawstyle='steps-post')
+        ax2.set_xlabel('Steps')
+        ax2.set_ylabel('Position')
+        ax2.set_ylim(-0.1, 1.1)
+        ax2.legend()
+        ax2.grid(True)
+        
+        plt.tight_layout()
         plt.savefig(f"{self.config.log_dir}/backtest_results.png")
         print(f"Plot saved to {self.config.log_dir}/backtest_results.png")

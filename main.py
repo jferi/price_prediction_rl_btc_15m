@@ -9,6 +9,7 @@ from src.feature_engineering import FeatureEngineer
 from src.environment import create_env
 from src.agent import create_agent
 from src.training import Trainer
+from src.evaluation import Evaluator
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 def main():
@@ -61,11 +62,30 @@ def main():
     train_env = VecNormalize(train_env, norm_obs=False, norm_reward=True, clip_reward=10.0)
 
     # 5. Agent
-    agent = create_agent(train_env, config)
+    # verbose=0 beállítása, hogy ne rondítson bele az alap logolás a Dashboard-ba
+    agent = create_agent(train_env, config, verbose=0)
     
     # 6. Train
     trainer = Trainer(config, agent, train_env, val_env)
     trainer.train()
+    
+    # 7. Evaluate
+    print("\nRunning evaluation on validation set...")
+    evaluator = Evaluator(config, fe)
+    # We pass the UN-SCALED validation data because backtest() handles scaling internally
+    # Wait, Evaluator.backtest() calls fe.preprocess() which expects raw OHLCV data
+    # But val_df is already preprocessed.
+    
+    # Let's check Evaluator.backtest() implementation
+    # It calls preprocess() and scale().
+    # If we pass val_df (which is preprocessed), calling preprocess() again might break it or be redundant.
+    # Ideally we should pass the raw data corresponding to validation set.
+    
+    # Let's extract raw validation data from df_raw_full
+    # We need to align indices
+    val_raw_original = df_raw_full.loc[val_df.index]
+    
+    evaluator.backtest(agent, val_raw_original)
 
 if __name__ == "__main__":
     main()
