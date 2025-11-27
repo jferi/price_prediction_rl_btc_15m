@@ -9,21 +9,19 @@ from .config import Config
 from .data_loader import DataLoader
 from .feature_engineering import FeatureEngineer
 from .environment import TradingEnv
-from .network import LSTMExtractor, create_lstm_policy
-from .agent import PPOAgent
+from .network import LSTMExtractor
+from .agent import create_agent
 from .training import Trainer
 from .evaluation import Evaluator
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 __all__ = [
     "Config",
     "DataLoader", 
     "FeatureEngineer",
     "TradingEnv",
     "LSTMExtractor",
-    "create_lstm_policy",
-    "PPOAgent",
+    "create_agent",
     "Trainer",
     "Evaluator",
 ]
-
