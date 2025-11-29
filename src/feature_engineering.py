@@ -101,6 +101,3 @@ class FeatureEngineer:
             )
             
         return df_scaled
-
-    def get_observation_shape(self) -> Tuple[int, int]:
-        return (self.config.env.window_size, len(self.feature_cols))

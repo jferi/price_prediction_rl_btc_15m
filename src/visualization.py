@@ -39,10 +39,10 @@ class DashboardCallback(BaseCallback):
         )
         return layout
 
-    def on_training_start(self):
+    def _on_training_start(self):
         self.live.start()
 
-    def on_step(self) -> bool:
+    def _on_step(self) -> bool:
         # Extract info
         infos = self.locals.get("infos", [{}])[0]
         
@@ -63,7 +63,7 @@ class DashboardCallback(BaseCallback):
         
         return True
 
-    def on_training_end(self):
+    def _on_training_end(self):
         self.live.stop()
 
     def update_header(self):
