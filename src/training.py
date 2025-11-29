@@ -15,7 +15,7 @@ class TensorboardCallback(BaseCallback):
     def __init__(self, verbose=0):
         super().__init__(verbose)
 
-    def _on_step(self) -> bool:
+    def on_step(self) -> bool:
         # Log trades and portfolio value from environment info
         # We need to access the original environment. 
         # In VecEnv, it's inside .envs
